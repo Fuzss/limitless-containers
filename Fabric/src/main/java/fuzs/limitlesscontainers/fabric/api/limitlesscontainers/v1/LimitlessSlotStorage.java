@@ -1,8 +1,8 @@
 package fuzs.limitlesscontainers.fabric.api.limitlesscontainers.v1;
 
 import com.google.common.collect.MapMaker;
-import fuzs.limitlesscontainers.api.limitlesscontainers.v1.LimitlessContainerUtils;
-import fuzs.limitlesscontainers.api.limitlesscontainers.v1.MultipliedContainer;
+import fuzs.limitlesscontainers.common.api.limitlesscontainers.v1.LimitlessContainerUtils;
+import fuzs.limitlesscontainers.common.api.limitlesscontainers.v1.MultipliedContainer;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.base.SingleStackStorage;

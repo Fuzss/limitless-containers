@@ -1,9 +1,9 @@
 package fuzs.limitlesscontainers.fabric.impl;
 
 import fuzs.limitlesscontainers.fabric.api.limitlesscontainers.v1.LimitlessSlotStorage;
-import fuzs.limitlesscontainers.impl.LimitlessContainers;
-import fuzs.limitlesscontainers.impl.init.ModRegistry;
-import fuzs.limitlesscontainers.impl.world.level.block.entity.LimitlessChestBlockEntity;
+import fuzs.limitlesscontainers.common.impl.LimitlessContainers;
+import fuzs.limitlesscontainers.common.impl.init.ModRegistry;
+import fuzs.limitlesscontainers.common.impl.world.level.block.entity.LimitlessChestBlockEntity;
 import fuzs.puzzleslib.common.api.core.v1.ModConstructor;
 import fuzs.puzzleslib.common.api.core.v1.ModLoaderEnvironment;
 import net.fabricmc.api.ModInitializer;
