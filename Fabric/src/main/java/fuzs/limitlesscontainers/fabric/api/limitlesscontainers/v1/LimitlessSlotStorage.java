@@ -22,8 +22,8 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * Implementation heavily based on Fabric Api's {@link net.fabricmc.fabric.impl.transfer.item.InventoryStorageImpl} and
- * {@link net.fabricmc.fabric.impl.transfer.item.InventorySlotWrapper}, but without all the special cases for vanilla
+ * Implementation heavily based on Fabric Api's {@link net.fabricmc.fabric.impl.transfer.item.ContainerStorageImpl} and
+ * {@link net.fabricmc.fabric.impl.transfer.item.ContainerSlotWrapper}, but without all the special cases for vanilla
  * containers and no extensive performance considerations.
  */
 @SuppressWarnings("UnstableApiUsage")
