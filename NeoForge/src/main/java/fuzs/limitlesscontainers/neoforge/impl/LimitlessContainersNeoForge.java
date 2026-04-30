@@ -4,8 +4,8 @@ import fuzs.limitlesscontainers.impl.LimitlessContainers;
 import fuzs.limitlesscontainers.impl.init.ModRegistry;
 import fuzs.limitlesscontainers.impl.world.level.block.entity.LimitlessChestBlockEntity;
 import fuzs.limitlesscontainers.neoforge.api.limitlesscontainers.v2.LimitlessSlotResourceHandler;
-import fuzs.puzzleslib.api.core.v1.ModConstructor;
-import fuzs.puzzleslib.api.core.v1.ModLoaderEnvironment;
+import fuzs.puzzleslib.common.api.core.v1.ModConstructor;
+import fuzs.puzzleslib.common.api.core.v1.ModLoaderEnvironment;
 import net.neoforged.fml.common.Mod;
 
 @Mod(LimitlessContainers.MOD_ID)

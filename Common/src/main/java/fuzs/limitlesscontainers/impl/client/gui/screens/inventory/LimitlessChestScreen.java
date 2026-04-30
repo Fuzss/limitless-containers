@@ -1,8 +1,7 @@
 package fuzs.limitlesscontainers.impl.client.gui.screens.inventory;
 
 import fuzs.limitlesscontainers.api.limitlesscontainers.v1.client.LimitlessContainerScreen;
-import net.minecraft.resources.Identifier;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
@@ -25,20 +24,14 @@ public class LimitlessChestScreen<T extends AbstractContainerMenu> extends Limit
     }
 
     public LimitlessChestScreen(T menu, Inventory playerInventory, Component title, int containerRows) {
-        super(menu, playerInventory, title);
+        super(menu, playerInventory, title, DEFAULT_IMAGE_WIDTH, 114 + containerRows * 18);
         this.containerRows = containerRows;
-        this.imageHeight = 114 + this.containerRows * 18;
         this.inventoryLabelY = this.imageHeight - 94;
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
-        this.renderTooltip(guiGraphics, mouseX, mouseY);
-    }
-
-    @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+    public void extractBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractBackground(guiGraphics, mouseX, mouseY, partialTicks);
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED,
                 CONTAINER_BACKGROUND,
                 this.leftPos,

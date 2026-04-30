@@ -1,8 +1,8 @@
 package fuzs.limitlesscontainers.impl;
 
 import fuzs.limitlesscontainers.impl.init.ModRegistry;
-import fuzs.puzzleslib.api.core.v1.ModConstructor;
-import fuzs.puzzleslib.api.core.v1.ModLoaderEnvironment;
+import fuzs.puzzleslib.common.api.core.v1.ModConstructor;
+import fuzs.puzzleslib.common.api.core.v1.ModLoaderEnvironment;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,10 @@ public class LimitlessContainers implements ModConstructor {
     }
 
     private static void setupDevelopmentEnvironment() {
-        if (!ModLoaderEnvironment.INSTANCE.isDevelopmentEnvironment(MOD_ID)) return;
+        if (!ModLoaderEnvironment.INSTANCE.isDevelopmentEnvironment(MOD_ID)) {
+            return;
+        }
+
         ModRegistry.bootstrap();
     }
 

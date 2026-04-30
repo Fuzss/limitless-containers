@@ -4,9 +4,9 @@ import fuzs.limitlesscontainers.api.limitlesscontainers.v1.LimitlessContainerUti
 import fuzs.limitlesscontainers.api.limitlesscontainers.v1.MultipliedContainer;
 import fuzs.limitlesscontainers.impl.init.ModRegistry;
 import fuzs.limitlesscontainers.impl.world.inventory.LimitlessChestMenu;
-import fuzs.puzzleslib.api.block.v1.entity.TickingBlockEntity;
-import fuzs.puzzleslib.api.container.v1.ContainerMenuHelper;
-import fuzs.puzzleslib.api.container.v1.ListBackedContainer;
+import fuzs.puzzleslib.common.api.block.v1.entity.TickingBlockEntity;
+import fuzs.puzzleslib.common.api.container.v1.ContainerMenuHelper;
+import fuzs.puzzleslib.common.api.container.v1.ListBackedContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -39,7 +39,7 @@ public class LimitlessChestBlockEntity extends NamedBlockEntity implements LidBl
     }
 
     @Override
-    public void clientTick() {
+    public void clientTick(Level level, BlockPos blockPos, BlockState blockState) {
         this.chestLidController.tickLid();
     }
 
@@ -153,7 +153,7 @@ public class LimitlessChestBlockEntity extends NamedBlockEntity implements LidBl
                     SoundEvents.ENDER_CHEST_OPEN,
                     SoundSource.BLOCKS,
                     0.5F,
-                    level.random.nextFloat() * 0.1F + 0.9F);
+                    level.getRandom().nextFloat() * 0.1F + 0.9F);
         }
 
         @Override
@@ -165,7 +165,7 @@ public class LimitlessChestBlockEntity extends NamedBlockEntity implements LidBl
                     SoundEvents.ENDER_CHEST_CLOSE,
                     SoundSource.BLOCKS,
                     0.5F,
-                    level.random.nextFloat() * 0.1F + 0.9F);
+                    level.getRandom().nextFloat() * 0.1F + 0.9F);
         }
 
         @Override

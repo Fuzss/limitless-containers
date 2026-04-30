@@ -4,7 +4,7 @@ import fuzs.limitlesscontainers.impl.LimitlessContainers;
 import fuzs.limitlesscontainers.impl.world.inventory.LimitlessChestMenu;
 import fuzs.limitlesscontainers.impl.world.level.block.LimitlessChestBlock;
 import fuzs.limitlesscontainers.impl.world.level.block.entity.LimitlessChestBlockEntity;
-import fuzs.puzzleslib.api.init.v3.registry.RegistryManager;
+import fuzs.puzzleslib.common.api.init.v3.registry.RegistryManager;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.inventory.MenuType;

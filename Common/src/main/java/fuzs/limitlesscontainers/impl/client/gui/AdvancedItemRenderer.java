@@ -3,11 +3,11 @@ package fuzs.limitlesscontainers.impl.client.gui;
 import com.google.common.collect.ImmutableSortedMap;
 import fuzs.limitlesscontainers.impl.services.ClientAbstractions;
 import net.minecraft.ChatFormatting;
-import net.minecraft.util.Util;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.util.Util;
 import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.Nullable;
 
@@ -32,23 +32,23 @@ public class AdvancedItemRenderer {
     }
 
     /**
-     * @see GuiGraphics#renderItemDecorations(Font, ItemStack, int, int, String)
+     * @see GuiGraphicsExtractor#itemDecorations(Font, ItemStack, int, int)
      */
-    public static void renderItemDecorations(GuiGraphics guiGraphics, Font font, ItemStack itemStack, int x, int y, @Nullable String text) {
+    public static void itemDecorations(GuiGraphicsExtractor guiGraphics, Font font, ItemStack itemStack, int x, int y, @Nullable String text) {
         if (!itemStack.isEmpty()) {
             guiGraphics.pose().pushMatrix();
-            guiGraphics.renderItemBar(itemStack, x, y);
-            renderItemCount(guiGraphics, font, itemStack, x, y, text);
-            guiGraphics.renderItemCooldown(itemStack, x, y);
+            guiGraphics.itemBar(itemStack, x, y);
+            itemCount(guiGraphics, font, itemStack, x, y, text);
+            guiGraphics.itemCooldown(itemStack, x, y);
             guiGraphics.pose().popMatrix();
             ClientAbstractions.INSTANCE.renderItemOverlay(guiGraphics, font, itemStack, x, y);
         }
     }
 
     /**
-     * @see GuiGraphics#renderItemCount(Font, ItemStack, int, int, String)
+     * @see GuiGraphicsExtractor#itemCount(Font, ItemStack, int, int, String)
      */
-    private static void renderItemCount(GuiGraphics guiGraphics, Font font, ItemStack itemStack, int x, int y, @Nullable String text) {
+    private static void itemCount(GuiGraphicsExtractor guiGraphics, Font font, ItemStack itemStack, int x, int y, @Nullable String text) {
         if (itemStack.getCount() != 1 || text != null) {
             String string = shortenValue(getCountFromString(text).orElse(itemStack.getCount()));
             Style style = getStyleFromString(text);
@@ -57,7 +57,7 @@ public class AdvancedItemRenderer {
             guiGraphics.pose().scale(scale, scale);
             int posX = (int) ((x + 17) / scale - font.width(stackCount));
             int posY = (int) ((y + font.lineHeight * 2) / scale - font.lineHeight);
-            guiGraphics.drawString(font, string, posX, posY, -1, true);
+            guiGraphics.text(font, string, posX, posY, -1, true);
         }
     }
 
@@ -65,13 +65,12 @@ public class AdvancedItemRenderer {
         if (text != null) {
             try {
                 text = ChatFormatting.stripFormatting(text);
-                if (text != null) {
-                    return OptionalInt.of(Integer.parseInt(text));
-                }
+                return OptionalInt.of(Integer.parseInt(text));
             } catch (NumberFormatException ignored) {
 
             }
         }
+
         return OptionalInt.empty();
     }
 
@@ -101,6 +100,7 @@ public class AdvancedItemRenderer {
                 }
             }
         }
+
         return style;
     }
 }

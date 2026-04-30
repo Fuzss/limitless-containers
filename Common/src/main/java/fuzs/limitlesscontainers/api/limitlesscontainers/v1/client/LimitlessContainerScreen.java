@@ -3,7 +3,7 @@ package fuzs.limitlesscontainers.api.limitlesscontainers.v1.client;
 import fuzs.limitlesscontainers.api.limitlesscontainers.v1.LimitlessContainerUtils;
 import fuzs.limitlesscontainers.impl.client.gui.AdvancedItemRenderer;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -12,7 +12,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Vector2i;
@@ -26,6 +26,10 @@ public abstract class LimitlessContainerScreen<T extends AbstractContainerMenu> 
         super(menu, inventory, title);
     }
 
+    public LimitlessContainerScreen(T menu, Inventory inventory, Component title, int imageWidth, int imageHeight) {
+        super(menu, inventory, title, imageWidth, imageHeight);
+    }
+
     @Override
     protected List<Component> getTooltipFromContainerItem(ItemStack itemStack) {
         List<Component> tooltipLines = super.getTooltipFromContainerItem(itemStack);
@@ -37,9 +41,9 @@ public abstract class LimitlessContainerScreen<T extends AbstractContainerMenu> 
     }
 
     @Override
-    protected void renderFloatingItem(GuiGraphics guiGraphics, ItemStack itemStack, int x, int y, @Nullable String string) {
-        guiGraphics.renderItem(itemStack, x, y);
-        AdvancedItemRenderer.renderItemDecorations(guiGraphics,
+    public void extractFloatingItem(GuiGraphicsExtractor guiGraphics, ItemStack itemStack, int x, int y, @Nullable String string) {
+        guiGraphics.item(itemStack, x, y);
+        AdvancedItemRenderer.itemDecorations(guiGraphics,
                 this.font,
                 itemStack,
                 x,
@@ -48,7 +52,7 @@ public abstract class LimitlessContainerScreen<T extends AbstractContainerMenu> 
     }
 
     @Override
-    protected void renderSlot(GuiGraphics guiGraphics, Slot slot, int mouseX, int mouseY) {
+    public void extractSlot(GuiGraphicsExtractor guiGraphics, Slot slot, int mouseX, int mouseY) {
         int i = slot.x;
         int j = slot.y;
         ItemStack itemStack = slot.getItem();
@@ -99,12 +103,12 @@ public abstract class LimitlessContainerScreen<T extends AbstractContainerMenu> 
 
             int k = slot.x + slot.y * this.imageWidth;
             if (slot.isFake()) {
-                guiGraphics.renderFakeItem(itemStack, i, j, k);
+                guiGraphics.fakeItem(itemStack, i, j, k);
             } else {
-                guiGraphics.renderItem(itemStack, i, j, k);
+                guiGraphics.item(itemStack, i, j, k);
             }
 
-            AdvancedItemRenderer.renderItemDecorations(guiGraphics, this.font, itemStack, i, j, string);
+            AdvancedItemRenderer.itemDecorations(guiGraphics, this.font, itemStack, i, j, string);
         }
     }
 
@@ -145,9 +149,9 @@ public abstract class LimitlessContainerScreen<T extends AbstractContainerMenu> 
                     long l = Util.getMillis();
                     if (this.quickdropSlot == slot) {
                         if (l - this.quickdropTime > 500L) {
-                            this.slotClicked(this.clickedSlot, this.clickedSlot.index, 0, ClickType.PICKUP);
-                            this.slotClicked(slot, slot.index, 1, ClickType.PICKUP);
-                            this.slotClicked(this.clickedSlot, this.clickedSlot.index, 0, ClickType.PICKUP);
+                            this.slotClicked(this.clickedSlot, this.clickedSlot.index, 0, ContainerInput.PICKUP);
+                            this.slotClicked(slot, slot.index, 1, ContainerInput.PICKUP);
+                            this.slotClicked(this.clickedSlot, this.clickedSlot.index, 0, ContainerInput.PICKUP);
                             this.quickdropTime = l + 750L;
                             this.draggingItem.shrink(1);
                         }
@@ -194,12 +198,12 @@ public abstract class LimitlessContainerScreen<T extends AbstractContainerMenu> 
                                 slot2,
                                 this.lastQuickMoved,
                                 true)) {
-                            this.slotClicked(slot2, slot2.index, mouseButtonEvent.button(), ClickType.QUICK_MOVE);
+                            this.slotClicked(slot2, slot2.index, mouseButtonEvent.button(), ContainerInput.QUICK_MOVE);
                         }
                     }
                 }
             } else {
-                this.slotClicked(slot, k, mouseButtonEvent.button(), ClickType.PICKUP_ALL);
+                this.slotClicked(slot, k, mouseButtonEvent.button(), ContainerInput.PICKUP_ALL);
             }
 
             this.doubleclick = false;
@@ -227,15 +231,15 @@ public abstract class LimitlessContainerScreen<T extends AbstractContainerMenu> 
                         this.slotClicked(this.clickedSlot,
                                 this.clickedSlot.index,
                                 mouseButtonEvent.button(),
-                                ClickType.PICKUP);
-                        this.slotClicked(slot, k, 0, ClickType.PICKUP);
+                                ContainerInput.PICKUP);
+                        this.slotClicked(slot, k, 0, ContainerInput.PICKUP);
                         if (this.menu.getCarried().isEmpty()) {
                             this.snapbackData = null;
                         } else {
                             this.slotClicked(this.clickedSlot,
                                     this.clickedSlot.index,
                                     mouseButtonEvent.button(),
-                                    ClickType.PICKUP);
+                                    ContainerInput.PICKUP);
                             this.snapbackData = new AbstractContainerScreen.SnapbackData(this.draggingItem,
                                     new Vector2i((int) mouseButtonEvent.x(), (int) mouseButtonEvent.y()),
                                     new Vector2i(this.clickedSlot.x + i, this.clickedSlot.y + j),
@@ -254,29 +258,32 @@ public abstract class LimitlessContainerScreen<T extends AbstractContainerMenu> 
                 this.slotClicked(null,
                         -999,
                         AbstractContainerMenu.getQuickcraftMask(0, this.quickCraftingType),
-                        ClickType.QUICK_CRAFT);
+                        ContainerInput.QUICK_CRAFT);
 
                 for (Slot slot2x : this.quickCraftSlots) {
                     this.slotClicked(slot2x,
                             slot2x.index,
                             AbstractContainerMenu.getQuickcraftMask(1, this.quickCraftingType),
-                            ClickType.QUICK_CRAFT);
+                            ContainerInput.QUICK_CRAFT);
                 }
 
                 this.slotClicked(null,
                         -999,
                         AbstractContainerMenu.getQuickcraftMask(2, this.quickCraftingType),
-                        ClickType.QUICK_CRAFT);
+                        ContainerInput.QUICK_CRAFT);
             } else if (!this.menu.getCarried().isEmpty()) {
                 if (this.minecraft.options.keyPickItem.matchesMouse(mouseButtonEvent)) {
-                    this.slotClicked(slot, k, mouseButtonEvent.button(), ClickType.CLONE);
+                    this.slotClicked(slot, k, mouseButtonEvent.button(), ContainerInput.CLONE);
                 } else {
                     boolean bl2 = k != -999 && mouseButtonEvent.hasShiftDown();
                     if (bl2) {
                         this.lastQuickMoved = slot != null && slot.hasItem() ? slot.getItem().copy() : ItemStack.EMPTY;
                     }
 
-                    this.slotClicked(slot, k, mouseButtonEvent.button(), bl2 ? ClickType.QUICK_MOVE : ClickType.PICKUP);
+                    this.slotClicked(slot,
+                            k,
+                            mouseButtonEvent.button(),
+                            bl2 ? ContainerInput.QUICK_MOVE : ContainerInput.PICKUP);
                 }
             }
         }

@@ -2,7 +2,7 @@ package fuzs.limitlesscontainers.fabric.impl.client;
 
 import fuzs.limitlesscontainers.impl.LimitlessContainers;
 import fuzs.limitlesscontainers.impl.client.LimitlessContainersClient;
-import fuzs.puzzleslib.api.client.core.v1.ClientModConstructor;
+import fuzs.puzzleslib.common.api.client.core.v1.ClientModConstructor;
 import net.fabricmc.api.ClientModInitializer;
 
 public class LimitlessContainersFabricClient implements ClientModInitializer {

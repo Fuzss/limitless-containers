@@ -2,7 +2,7 @@ package fuzs.limitlesscontainers.impl.world.level.block;
 
 import fuzs.limitlesscontainers.impl.init.ModRegistry;
 import fuzs.limitlesscontainers.impl.world.level.block.entity.LimitlessChestBlockEntity;
-import fuzs.puzzleslib.api.block.v1.entity.TickingEntityBlock;
+import fuzs.puzzleslib.common.api.block.v1.entity.TickingEntityBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;

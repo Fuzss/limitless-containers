@@ -16,9 +16,9 @@ public abstract class LimitlessContainerMenu extends AbstractContainerMenu {
     }
 
     @Override
-    protected void doClick(int slotId, int button, ClickType clickType, Player player) {
+    public void doClick(int slotId, int button, ContainerInput clickType, Player player) {
         Inventory inventory = player.getInventory();
-        if (clickType == ClickType.QUICK_CRAFT) {
+        if (clickType == ContainerInput.QUICK_CRAFT) {
             int i = this.quickcraftStatus;
             this.quickcraftStatus = getQuickcraftHeader(button);
             if ((i != 1 || this.quickcraftStatus != 2) && i != this.quickcraftStatus) {
@@ -46,7 +46,7 @@ public abstract class LimitlessContainerMenu extends AbstractContainerMenu {
                     if (this.quickcraftSlots.size() == 1) {
                         int j = this.quickcraftSlots.iterator().next().index;
                         this.resetQuickCraft();
-                        this.doClick(j, this.quickcraftType, ClickType.PICKUP, player);
+                        this.doClick(j, this.quickcraftType, ContainerInput.PICKUP, player);
                         return;
                     }
 
@@ -85,7 +85,7 @@ public abstract class LimitlessContainerMenu extends AbstractContainerMenu {
             }
         } else if (this.quickcraftStatus != 0) {
             this.resetQuickCraft();
-        } else if ((clickType == ClickType.PICKUP || clickType == ClickType.QUICK_MOVE) && (button == 0
+        } else if ((clickType == ContainerInput.PICKUP || clickType == ContainerInput.QUICK_MOVE) && (button == 0
                 || button == 1)) {
             ClickAction clickAction = button == 0 ? ClickAction.PRIMARY : ClickAction.SECONDARY;
             if (slotId == -999) {
@@ -97,7 +97,7 @@ public abstract class LimitlessContainerMenu extends AbstractContainerMenu {
                         LimitlessContainerUtils.drop(player, this.getCarried().split(1), true);
                     }
                 }
-            } else if (clickType == ClickType.QUICK_MOVE) {
+            } else if (clickType == ContainerInput.QUICK_MOVE) {
                 if (slotId < 0) {
                     return;
                 }
@@ -159,7 +159,7 @@ public abstract class LimitlessContainerMenu extends AbstractContainerMenu {
 
                 slot.setChanged();
             }
-        } else if (clickType == ClickType.SWAP && (button >= 0 && button < 9 || button == 40)) {
+        } else if (clickType == ContainerInput.SWAP && (button >= 0 && button < 9 || button == 40)) {
             ItemStack itemStack5 = inventory.getItem(button);
             Slot slot = this.slots.get(slotId);
             ItemStack itemStack = slot.getItem();
@@ -206,7 +206,7 @@ public abstract class LimitlessContainerMenu extends AbstractContainerMenu {
                     }
                 }
             }
-        } else if (clickType == ClickType.CLONE && player.hasInfiniteMaterials() && this.getCarried().isEmpty()
+        } else if (clickType == ContainerInput.CLONE && player.hasInfiniteMaterials() && this.getCarried().isEmpty()
                 && slotId >= 0) {
             Slot slot3 = this.slots.get(slotId);
             if (slot3.hasItem()) {
@@ -214,7 +214,7 @@ public abstract class LimitlessContainerMenu extends AbstractContainerMenu {
 //                this.setCarried(itemStack2.copyWithCount(itemStack2.getMaxStackSize()));
                 this.setCarried(itemStack2.copyWithCount(slot3.getMaxStackSize(itemStack2)));
             }
-        } else if (clickType == ClickType.THROW && this.getCarried().isEmpty() && slotId >= 0) {
+        } else if (clickType == ContainerInput.THROW && this.getCarried().isEmpty() && slotId >= 0) {
             Slot slot3 = this.slots.get(slotId);
             int j = button == 0 ? 1 : slot3.getItem().getCount();
             if (!player.canDropItems()) {
@@ -235,7 +235,7 @@ public abstract class LimitlessContainerMenu extends AbstractContainerMenu {
                     player.handleCreativeModeItemDrop(itemStack);
                 }
             }
-        } else if (clickType == ClickType.PICKUP_ALL && slotId >= 0) {
+        } else if (clickType == ContainerInput.PICKUP_ALL && slotId >= 0) {
             Slot slot3x = this.slots.get(slotId);
             ItemStack itemStack2 = this.getCarried();
             if (!itemStack2.isEmpty() && (!slot3x.hasItem() || !slot3x.mayPickup(player))) {

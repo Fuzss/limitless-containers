@@ -3,7 +3,7 @@ package fuzs.limitlesscontainers.api.limitlesscontainers.v1;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import fuzs.puzzleslib.api.container.v1.ContainerSerializationHelper;
+import fuzs.puzzleslib.common.api.container.v1.ContainerSerializationHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentPatch;
@@ -30,12 +30,12 @@ import org.jspecify.annotations.Nullable;
 import java.util.OptionalInt;
 import java.util.Set;
 
-public class LimitlessContainerUtils {
+public final class LimitlessContainerUtils {
     /**
      * @see ItemStack#MAP_CODEC
      */
     public static final MapCodec<ItemStack> ITEM_STACK_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Item.CODEC.fieldOf("id").forGetter(ItemStack::getItemHolder),
+            Item.CODEC.fieldOf("id").forGetter(ItemStack::typeHolder),
             ExtraCodecs.POSITIVE_INT.fieldOf("count").orElse(1).forGetter(ItemStack::getCount),
             DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY)
                     .forGetter(ItemStack::getComponentsPatch)).apply(instance, ItemStack::new));
@@ -46,18 +46,34 @@ public class LimitlessContainerUtils {
             ExtraCodecs.UNSIGNED_BYTE.fieldOf("Slot").orElse(0).forGetter(ItemStackWithSlot::slot),
             ITEM_STACK_CODEC.forGetter(ItemStackWithSlot::stack)).apply(instance, ItemStackWithSlot::new));
 
+    private LimitlessContainerUtils() {
+        // NO-OP
+    }
+
+    /**
+     * @see net.minecraft.world.ContainerHelper#saveAllItems(ValueOutput, NonNullList)
+     */
     public static void saveAllItems(ValueOutput valueOutput, NonNullList<ItemStack> itemStacks) {
         ContainerSerializationHelper.storeAsSlots(itemStacks, valueOutput.list("Items", ITEM_STACK_WITH_SLOT_CODEC));
     }
 
+    /**
+     * @see net.minecraft.world.ContainerHelper#loadAllItems(ValueInput, NonNullList)
+     */
     public static void loadAllItems(ValueInput valueInput, NonNullList<ItemStack> itemStacks) {
         ContainerSerializationHelper.fromSlots(itemStacks, valueInput.listOrEmpty("Items", ITEM_STACK_WITH_SLOT_CODEC));
     }
 
+    /**
+     * @see net.minecraft.world.Containers#dropContents(Level, BlockPos, Container)
+     */
     public static void dropContents(Level level, BlockPos pos, Container inventory) {
         dropContents(level, pos.getX(), pos.getY(), pos.getZ(), inventory);
     }
 
+    /**
+     * @see net.minecraft.world.Containers#dropContents(Level, double, double, double, Container)
+     */
     private static void dropContents(Level level, double x, double y, double z, Container inventory) {
         for (int i = 0; i < inventory.getContainerSize(); ++i) {
             ItemStack item = inventory.getItem(i);
@@ -65,32 +81,44 @@ public class LimitlessContainerUtils {
         }
     }
 
-    public static void dropItemStack(Level level, double x, double y, double z, ItemStack stack) {
+    /**
+     * @see net.minecraft.world.Containers#dropItemStack(Level, double, double, double, ItemStack)
+     */
+    public static void dropItemStack(Level level, double x, double y, double z, ItemStack itemStack) {
         double d = EntityType.ITEM.getWidth();
         double e = 1.0 - d;
         double f = d / 2.0;
-        double g = Math.floor(x) + level.random.nextDouble() * e + f;
-        double h = Math.floor(y) + level.random.nextDouble() * e;
-        double i = Math.floor(z) + level.random.nextDouble() * e + f;
+        double g = Math.floor(x) + level.getRandom().nextDouble() * e + f;
+        double h = Math.floor(y) + level.getRandom().nextDouble() * e;
+        double i = Math.floor(z) + level.getRandom().nextDouble() * e + f;
 
-        while (!stack.isEmpty()) {
+        while (!itemStack.isEmpty()) {
             // don't split stacks into smaller parts like vanilla, keep them as big as possible
-            ItemEntity itemEntity = new ItemEntity(level, g, h, i, stack.split(stack.getMaxStackSize()));
+            ItemEntity itemEntity = new ItemEntity(level, g, h, i, itemStack.split(itemStack.getMaxStackSize()));
             // remove any motion, will help with lag
             itemEntity.setDeltaMovement(Vec3.ZERO);
             level.addFreshEntity(itemEntity);
         }
     }
 
-    public static int getMaxStackSizeOrDefault(ItemStack stack, int stackSizeMultiplier) {
-        return getMaxStackSize(stack, stackSizeMultiplier).orElseGet(stack::getMaxStackSize);
+    /**
+     * @see ItemStack#getMaxStackSize()
+     */
+    public static int getMaxStackSizeOrDefault(ItemStack itemStack, int stackSizeMultiplier) {
+        return getMaxStackSize(itemStack, stackSizeMultiplier).orElseGet(itemStack::getMaxStackSize);
     }
 
-    public static OptionalInt getMaxStackSize(ItemStack stack, int stackSizeMultiplier) {
-        return stack.getMaxStackSize() > 1 || !stack.isDamageableItem() ?
-                OptionalInt.of(stack.getMaxStackSize() * stackSizeMultiplier) : OptionalInt.empty();
+    /**
+     * @see ItemStack#getMaxStackSize()
+     */
+    public static OptionalInt getMaxStackSize(ItemStack itemStack, int stackSizeMultiplier) {
+        return itemStack.getMaxStackSize() > 1 || !itemStack.isDamageableItem() ?
+                OptionalInt.of(itemStack.getMaxStackSize() * stackSizeMultiplier) : OptionalInt.empty();
     }
 
+    /**
+     * @see net.minecraft.world.inventory.AbstractContainerMenu#getQuickCraftPlaceCount(int, int, ItemStack)
+     */
     public static int getQuickCraftPlaceCount(Set<Slot> slots, int dragMode, ItemStack itemStack, Slot slot) {
         return switch (dragMode) {
             case 0 -> Mth.floor((float) itemStack.getCount() / slots.size());
@@ -100,19 +128,29 @@ public class LimitlessContainerUtils {
         };
     }
 
-    public static boolean canItemQuickReplace(@Nullable Slot slot, ItemStack stack, boolean stackSizeMatters) {
+    /**
+     * @see net.minecraft.world.inventory.AbstractContainerMenu#canItemQuickReplace(Slot, ItemStack, boolean)
+     */
+    public static boolean canItemQuickReplace(@Nullable Slot slot, ItemStack itemStack, boolean stackSizeMatters) {
         boolean bl = slot == null || !slot.hasItem();
-        if (!bl && ItemStack.isSameItemSameComponents(stack, slot.getItem())) {
-            return slot.getItem().getCount() + (stackSizeMatters ? 0 : stack.getCount()) <= slot.getMaxStackSize(stack);
+        if (!bl && ItemStack.isSameItemSameComponents(itemStack, slot.getItem())) {
+            return slot.getItem().getCount() + (stackSizeMatters ? 0 : itemStack.getCount()) <= slot.getMaxStackSize(
+                    itemStack);
         } else {
             return bl;
         }
     }
 
+    /**
+     * @see net.minecraft.world.inventory.AbstractContainerMenu#getRedstoneSignalFromBlockEntity(BlockEntity)
+     */
     public static int getRedstoneSignalFromBlockEntity(@Nullable BlockEntity blockEntity) {
         return blockEntity instanceof MultipliedContainer container ? getRedstoneSignalFromContainer(container) : 0;
     }
 
+    /**
+     * @see net.minecraft.world.inventory.AbstractContainerMenu#getRedstoneSignalFromContainer(Container)
+     */
     public static int getRedstoneSignalFromContainer(@Nullable MultipliedContainer container) {
         if (container == null) {
             return 0;
@@ -134,27 +172,40 @@ public class LimitlessContainerUtils {
         }
     }
 
+    /**
+     * @see net.minecraft.world.inventory.AbstractContainerMenu#dropOrPlaceInInventory(Player, ItemStack)
+     */
     public static void dropOrPlaceInInventory(Player player, ItemStack itemStack) {
-        boolean bl = player.isRemoved() && player.getRemovalReason() != Entity.RemovalReason.CHANGED_DIMENSION;
-        boolean bl2 = player instanceof ServerPlayer serverPlayer && serverPlayer.hasDisconnected();
-        if (bl || bl2) {
+        boolean playerRemovedNotChangingDimension =
+                player.isRemoved() && player.getRemovalReason() != Entity.RemovalReason.CHANGED_DIMENSION;
+        boolean serverPlayerHasDisconnected =
+                player instanceof ServerPlayer serverPlayer && serverPlayer.hasDisconnected();
+        if (playerRemovedNotChangingDimension || serverPlayerHasDisconnected) {
             drop(player, itemStack, false);
         } else if (player instanceof ServerPlayer) {
             placeItemBackInInventory(player.getInventory(), itemStack);
         }
     }
 
+    /**
+     * @see Inventory#placeItemBackInInventory(ItemStack)
+     */
     public static void placeItemBackInInventory(Inventory inventory, ItemStack itemStack) {
         while (itemStack.getCount() > itemStack.getMaxStackSize()) {
             inventory.placeItemBackInInventory(itemStack.split(itemStack.getMaxStackSize()));
         }
+
         inventory.placeItemBackInInventory(itemStack);
     }
 
+    /**
+     * @see Player#drop(ItemStack, boolean)
+     */
     public static void drop(Player player, ItemStack itemStack, boolean includeThrowerName) {
         while (itemStack.getCount() > itemStack.getMaxStackSize()) {
             player.drop(itemStack.split(itemStack.getMaxStackSize()), includeThrowerName);
         }
+
         player.drop(itemStack, includeThrowerName);
     }
 }
