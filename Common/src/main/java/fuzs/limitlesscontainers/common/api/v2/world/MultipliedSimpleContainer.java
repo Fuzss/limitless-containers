@@ -1,5 +1,6 @@
-package fuzs.limitlesscontainers.common.api.limitlesscontainers.v1;
+package fuzs.limitlesscontainers.common.api.v2.world;
 
+import fuzs.limitlesscontainers.common.api.v2.world.inventory.LimitlessContainerUtils;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 
@@ -25,10 +26,10 @@ public class MultipliedSimpleContainer extends SimpleContainer implements Multip
     }
 
     @Override
-    public boolean canAddItem(ItemStack stack) {
+    public boolean canAddItem(ItemStack itemStack) {
         for (int i = 0; i < this.getContainerSize(); i++) {
-            ItemStack itemStack = this.getItem(i);
-            if (itemStack.isEmpty() || ItemStack.isSameItemSameComponents(itemStack, stack) && itemStack.getCount() < LimitlessContainerUtils.getMaxStackSizeOrDefault(itemStack, this.getStackSizeMultiplier())) {
+            ItemStack itemAtIndex = this.getItem(i);
+            if (itemAtIndex.isEmpty() || ItemStack.isSameItemSameComponents(itemAtIndex, itemStack) && itemAtIndex.getCount() < LimitlessContainerUtils.getMaxStackSizeOrDefault(itemAtIndex, this.getStackSizeMultiplier())) {
                 return true;
             }
         }

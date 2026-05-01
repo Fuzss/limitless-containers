@@ -1,6 +1,6 @@
 package fuzs.limitlesscontainers.fabric.impl;
 
-import fuzs.limitlesscontainers.fabric.api.limitlesscontainers.v1.LimitlessSlotStorage;
+import fuzs.limitlesscontainers.fabric.api.v2.LimitlessSlotStorage;
 import fuzs.limitlesscontainers.common.impl.LimitlessContainers;
 import fuzs.limitlesscontainers.common.impl.init.ModRegistry;
 import fuzs.limitlesscontainers.common.impl.world.level.block.entity.LimitlessChestBlockEntity;

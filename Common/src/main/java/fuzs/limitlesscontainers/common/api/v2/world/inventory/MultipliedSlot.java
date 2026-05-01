@@ -1,5 +1,6 @@
-package fuzs.limitlesscontainers.common.api.limitlesscontainers.v1;
+package fuzs.limitlesscontainers.common.api.v2.world.inventory;
 
+import fuzs.limitlesscontainers.common.api.v2.world.MultipliedContainer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
@@ -12,7 +13,7 @@ public class MultipliedSlot extends Slot {
     }
 
     @Override
-    public int getMaxStackSize(ItemStack stack) {
-        return LimitlessContainerUtils.getMaxStackSize(stack, this.stackSizeMultiplier).orElseGet(() -> super.getMaxStackSize(stack));
+    public int getMaxStackSize(ItemStack itemStack) {
+        return LimitlessContainerUtils.getMaxStackSize(itemStack, this.stackSizeMultiplier).orElseGet(() -> super.getMaxStackSize(itemStack));
     }
 }

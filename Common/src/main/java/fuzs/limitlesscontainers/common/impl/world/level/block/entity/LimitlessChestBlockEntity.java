@@ -1,7 +1,7 @@
 package fuzs.limitlesscontainers.common.impl.world.level.block.entity;
 
-import fuzs.limitlesscontainers.common.api.limitlesscontainers.v1.LimitlessContainerUtils;
-import fuzs.limitlesscontainers.common.api.limitlesscontainers.v1.MultipliedContainer;
+import fuzs.limitlesscontainers.common.api.v2.world.inventory.LimitlessContainerUtils;
+import fuzs.limitlesscontainers.common.api.v2.world.MultipliedContainer;
 import fuzs.limitlesscontainers.common.impl.init.ModRegistry;
 import fuzs.limitlesscontainers.common.impl.world.inventory.LimitlessChestMenu;
 import fuzs.puzzleslib.common.api.block.v1.entity.TickingBlockEntity;

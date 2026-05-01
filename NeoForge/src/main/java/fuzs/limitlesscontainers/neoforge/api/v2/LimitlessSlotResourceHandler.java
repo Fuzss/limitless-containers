@@ -1,8 +1,8 @@
-package fuzs.limitlesscontainers.neoforge.api.limitlesscontainers.v2;
+package fuzs.limitlesscontainers.neoforge.api.v2;
 
 import com.google.common.collect.MapMaker;
-import fuzs.limitlesscontainers.common.api.limitlesscontainers.v1.LimitlessContainerUtils;
-import fuzs.limitlesscontainers.common.api.limitlesscontainers.v1.MultipliedContainer;
+import fuzs.limitlesscontainers.common.api.v2.world.inventory.LimitlessContainerUtils;
+import fuzs.limitlesscontainers.common.api.v2.world.MultipliedContainer;
 import fuzs.puzzleslib.neoforge.api.init.v3.capability.NeoForgeCapabilityHelper;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;

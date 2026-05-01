@@ -1,6 +1,6 @@
-package fuzs.limitlesscontainers.common.api.limitlesscontainers.v1.client;
+package fuzs.limitlesscontainers.common.api.v2.client.gui.screens.inventory;
 
-import fuzs.limitlesscontainers.common.api.limitlesscontainers.v1.LimitlessContainerUtils;
+import fuzs.limitlesscontainers.common.api.v2.world.inventory.LimitlessContainerUtils;
 import fuzs.limitlesscontainers.common.impl.client.gui.AdvancedItemRenderer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;

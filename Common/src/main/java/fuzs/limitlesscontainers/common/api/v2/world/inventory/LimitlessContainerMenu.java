@@ -1,4 +1,4 @@
-package fuzs.limitlesscontainers.common.api.limitlesscontainers.v1;
+package fuzs.limitlesscontainers.common.api.v2.world.inventory;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;

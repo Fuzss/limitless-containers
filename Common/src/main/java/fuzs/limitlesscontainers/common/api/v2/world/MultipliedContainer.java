@@ -1,5 +1,6 @@
-package fuzs.limitlesscontainers.common.api.limitlesscontainers.v1;
+package fuzs.limitlesscontainers.common.api.v2.world;
 
+import fuzs.limitlesscontainers.common.api.v2.world.inventory.LimitlessContainerUtils;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 

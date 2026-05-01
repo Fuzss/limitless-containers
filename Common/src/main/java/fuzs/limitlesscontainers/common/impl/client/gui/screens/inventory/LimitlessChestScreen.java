@@ -1,6 +1,6 @@
 package fuzs.limitlesscontainers.common.impl.client.gui.screens.inventory;
 
-import fuzs.limitlesscontainers.common.api.limitlesscontainers.v1.client.LimitlessContainerScreen;
+import fuzs.limitlesscontainers.common.api.v2.client.gui.screens.inventory.LimitlessContainerScreen;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;

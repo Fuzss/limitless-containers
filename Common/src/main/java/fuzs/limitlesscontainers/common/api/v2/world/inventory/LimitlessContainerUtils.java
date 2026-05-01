@@ -1,10 +1,12 @@
-package fuzs.limitlesscontainers.common.api.limitlesscontainers.v1;
+package fuzs.limitlesscontainers.common.api.v2.world.inventory;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import fuzs.limitlesscontainers.common.api.v2.world.MultipliedContainer;
 import fuzs.puzzleslib.common.api.container.v1.ContainerSerializationHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,6 +22,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.storage.ValueInput;
@@ -32,9 +35,24 @@ import java.util.Set;
 
 public final class LimitlessContainerUtils {
     /**
+     * @see ItemStackTemplate#MAP_CODEC
+     */
+    public static final MapCodec<ItemStackTemplate> ITEM_STACK_TEMPLATE_MAP_CODEC = RecordCodecBuilder.mapCodec((RecordCodecBuilder.Instance<ItemStackTemplate> instance) -> instance.group(
+            Item.CODEC.fieldOf("id").forGetter(ItemStackTemplate::item),
+            ExtraCodecs.POSITIVE_INT.optionalFieldOf("count", 1).forGetter(ItemStackTemplate::count),
+            DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY)
+                    .forGetter(ItemStackTemplate::components)).apply(instance, ItemStackTemplate::new));
+    /**
+     * @see ItemStackTemplate#CODEC
+     */
+    public static final Codec<ItemStackTemplate> ITEM_STACK_TEMPLATE_CODEC = Codec.withAlternative(
+            ITEM_STACK_TEMPLATE_MAP_CODEC.codec(),
+            Item.CODEC,
+            (Holder<Item> item) -> new ItemStackTemplate(item.value()));
+    /**
      * @see ItemStack#MAP_CODEC
      */
-    public static final MapCodec<ItemStack> ITEM_STACK_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+    public static final MapCodec<ItemStack> ITEM_STACK_CODEC = RecordCodecBuilder.mapCodec((RecordCodecBuilder.Instance<ItemStack> instance) -> instance.group(
             Item.CODEC.fieldOf("id").forGetter(ItemStack::typeHolder),
             ExtraCodecs.POSITIVE_INT.fieldOf("count").orElse(1).forGetter(ItemStack::getCount),
             DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY)
@@ -42,7 +60,7 @@ public final class LimitlessContainerUtils {
     /**
      * @see ItemStackWithSlot#CODEC
      */
-    public static final Codec<ItemStackWithSlot> ITEM_STACK_WITH_SLOT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<ItemStackWithSlot> ITEM_STACK_WITH_SLOT_CODEC = RecordCodecBuilder.create((RecordCodecBuilder.Instance<ItemStackWithSlot> instance) -> instance.group(
             ExtraCodecs.UNSIGNED_BYTE.fieldOf("Slot").orElse(0).forGetter(ItemStackWithSlot::slot),
             ITEM_STACK_CODEC.forGetter(ItemStackWithSlot::stack)).apply(instance, ItemStackWithSlot::new));
 
